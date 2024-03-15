@@ -1,0 +1,408 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.F_FTP..Create(BaseForm)
+Gui.F_FTP..Caption("Send Invoice(s) to Customer (6043)")
+Gui.F_FTP..Size(1024,720)
+Gui.F_FTP..MinX(0)
+Gui.F_FTP..MinY(0)
+Gui.F_FTP..Position(0,0)
+Gui.F_FTP..AlwaysOnTop(False)
+Gui.F_FTP..FontName("Tahoma")
+Gui.F_FTP..FontSize(8.25)
+Gui.F_FTP..ControlBox(True)
+Gui.F_FTP..MaxButton(True)
+Gui.F_FTP..MinButton(True)
+Gui.F_FTP..MousePointer(0)
+Gui.F_FTP..Moveable(True)
+Gui.F_FTP..Sizeable(True)
+Gui.F_FTP..ShowInTaskBar(True)
+Gui.F_FTP..TitleBar(True)
+Gui.F_FTP..Event(UnLoad,Unload)
+Gui.F_FTP.lbl1.Create(Label,"Vendor ID",True,48,13,0,29,25,True,0,"Tahoma",8.25,,0,0)
+Gui.F_FTP.lbl1.BorderStyle(0)
+Gui.F_FTP.txtVendor.Create(TextBox,"",True,224,20,0,25,53,True,0,"Tahoma",8.25,,1)
+Gui.F_FTP.cmdSend.Create(Button)
+Gui.F_FTP.cmdSend.Enabled(True)
+Gui.F_FTP.cmdSend.Visible(True)
+Gui.F_FTP.cmdSend.Zorder(0)
+Gui.F_FTP.cmdSend.Size(75,23)
+Gui.F_FTP.cmdSend.Position(25,87)
+Gui.F_FTP.cmdSend.Caption("Send")
+Gui.F_FTP.cmdSend.FontName("Tahoma")
+Gui.F_FTP.cmdSend.FontSize(8.25)
+Gui.F_FTP.cmdSend.Event(Click,CmdSave_Click)
+Gui.F_FTP.cmdBrowser.Create(Button)
+Gui.F_FTP.cmdBrowser.Enabled(True)
+Gui.F_FTP.cmdBrowser.Visible(True)
+Gui.F_FTP.cmdBrowser.Zorder(0)
+Gui.F_FTP.cmdBrowser.Size(75,23)
+Gui.F_FTP.cmdBrowser.Position(262,51)
+Gui.F_FTP.cmdBrowser.Caption("Browse")
+Gui.F_FTP.cmdBrowser.FontName("Tahoma")
+Gui.F_FTP.cmdBrowser.FontSize(8.25)
+Gui.F_FTP.cmdBrowser.Event(Click,CmdBrowse_Click)
+Gui.F_FTP.GsGCCust.Create(GsGridControl)
+Gui.F_FTP.GsGCCust.Enabled(True)
+Gui.F_FTP.GsGCCust.Visible(True)
+Gui.F_FTP.GsGCCust.Zorder(0)
+Gui.F_FTP.GsGCCust.Size(981,534)
+Gui.F_FTP.GsGCCust.Position(22,130)
+Gui.F_FTP.GsGCCust.Event(RowCellClick,GSGCCust_RowCellClick)
+'Gui.F_FTP.GsGCsv.Create(GsGridControl)
+'Gui.F_FTP.GsGCsv.Enabled(True)
+'Gui.F_FTP.GsGCsv.Visible(True)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+V.Local.sSQL.Declare
+V.Local.sVendor.Declare
+V.Local.bExist.Declare
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+
+F.ODBC.Connection!con.OpenCompanyConnection(300)
+
+F.ODBC.Connection!con.TableExists("GAB_6043_FTP_SETUP",V.Local.bExist)
+F.Intrinsic.Control.If(V.Local.bExist,=,False)
+	F.Intrinsic.UI.Msgbox("Please create Vendor ID under System Support > Administration > FTP Setup before using this program","NOTIFICATION")
+	F.Intrinsic.Control.CallSub(Unload)
+F.Intrinsic.Control.EndIf
+
+Gui.F_FTP.GsGCCust.Anchor(15)
+F.Intrinsic.Control.CallSub(LoadGSCustomer,"sVendor","")
+
+Gui.F_FTP..Show
+
+Program.Sub.Main.End
+
+Program.Sub.Unload.Start
+V.Local.sSQL.Declare
+V.Local.sVendor.Declare
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+
+F.ODBC.Connection!con.Close
+F.Intrinsic.Control.End
+
+Program.Sub.Unload.End
+
+Program.Sub.cmdbrowse_click.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.iRet.Declare
+Variable.Local.sRet.Declare(String)
+Variable.Local.sTemp.Declare(String)
+Variable.Local.sTitles.Declare(String)
+Variable.Local.iWidths.Declare(Long)
+V.Local.sPart.Declare
+V.Local.sSQL.Declare
+
+V.Local.iLength.Declare(Long)
+
+'Function.Intrinsic.String.Split("Vendor ID*!*","*!*",Variable.local.sTitles)
+'Function.Intrinsic.String.Split("500*!*","*!*",Variable.local.iWidths)
+
+Variable.local.sTitles.Set("Vendor ID")
+Variable.local.iWidths.Set(500)
+
+F.Intrinsic.Debug.SetLA("Generating browser")
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+F.Intrinsic.UI.Browser("Select Vendor ID","con","SELECT VENDOR_ID FROM GAB_6043_FTP_SETUP",V.Local.sTitles,V.Local.iWidths,V.Local.sRet)
+F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	gui.F_FTP.txtVendor.Text(V.Local.sRet(0).Trim)
+	
+	F.Intrinsic.String.Build("Select * From GAB_6043_FTP_SETUP where Vendor_ID='{0}'",V.Local.sRet(0).Trim,V.Local.sSQL)
+	F.ODBC.Connection!con.OpenLocalRecordsetRO("rst",V.Local.sSql)
+	F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+		gui.F_FTP.txtUsername.Text(V.ODBC.con!rst.FieldVal!Username)
+		gui.F_FTP.txtPASS.Text(V.ODBC.con!rst.FieldVal!Pass)
+		gui.F_FTP.txtHost.Text(V.ODBC.con!rst.FieldVal!Host)
+		gui.F_FTP.txtPort.Text(V.ODBC.con!rst.FieldVal!Port)
+		gui.F_FTP.chkSecure.Value(V.ODBC.con!rst.FieldVal!Flag_Secure)
+	F.Intrinsic.Control.Else
+		gui.F_FTP.txtUsername.Text("")
+		gui.F_FTP.txtPASS.Text("")
+		gui.F_FTP.txtHost.Text("")
+		gui.F_FTP.txtPort.Text("")
+	F.Intrinsic.Control.EndIf
+	F.ODBC.con!rst.Close
+		
+'		F.Intrinsic.Control.CallSub(LoadgsCustomer,"sVendor",V.Local.sRet(0).Trim,"sUsername",V.Local.sRet(1).Trim,"sPASS",V.Local.sRet(2).Trim,"sHost",V.Local.sRet(3).Trim),"sPort",V.Local.sRet(4).Trim)
+		F.Intrinsic.Control.CallSub(LoadgsCustomer,"sVendor",V.Local.sRet(0).Trim)
+'	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Else
+	F.Intrinsic.UI.Msgbox("Vendor ID is not selected","NOTIFICATION")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+V.Local.sError.Declare(String)
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GAB_6043_Generate_Invoice.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.String.Concat(V.Local.sError,V.Ambient.NewLine,"Last Action: ",V.Ambient.NewLine,V.Ambient.LastAction,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.cmdbrowse_click.End
+
+Program.Sub.loadGSCustomer.Start
+V.Local.bInString.Declare(Boolean)
+
+V.Local.i1.Declare(Long)
+V.Local.iLen.Declare(Long)
+
+V.Local.sCust.Declare(String)
+V.Local.sDesc.Declare(String)
+V.Local.sDropdown.Declare(String)
+V.Local.sPartQuote.Declare(String)
+V.Local.sSql.Declare(String)
+V.Local.sRev.Declare(String)
+V.Local.sWO.Declare(String)
+V.Local.sWOSuffix.Declare(String)
+V.Local.sVendor.Declare
+V.Local.sCustomer.Declare
+
+Gui.F_FTP.GsGCCust.Enabled(False)
+Gui.F_FTP.GsGCCust.Visible(False)
+
+'Load information from V_QUOTE_LINES based on the selected part number
+F.Intrinsic.Control.If(V.DataTable.dtCustomer.Exists,=,True)
+	F.Data.DataTable.Close("dtCustomer")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Args.sVendor.Trim,<>,"")
+	F.Intrinsic.String.Build("select Customer_ID from GAB_6043_FTP_CUST where Vendor_ID = '{0}'",V.Args.sVendor.Trim,V.Local.sSql)
+	F.Data.DataTable.CreateFromSQL("dtTemp","con",V.Local.sSQL,True)
+	
+	F.Intrinsic.Control.For(V.Local.i1,0,V.DataTable.dtTemp.RowCount--,1)
+		F.Intrinsic.Control.If(V.Local.i1, =, 0)
+			F.Intrinsic.String.Build("A.Customer = '{0}'",V.DataTable.dtTemp(V.Local.i1).Customer_ID!FieldVal,V.Local.sCustomer)		
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Build("{1} Or A.Customer = '{0}'",V.DataTable.dtTemp(V.Local.i1).Customer_ID!FieldVal,V.Local.sCustomer,V.Local.sCustomer)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Next(V.Local.i1)
+	
+	F.Intrinsic.Control.If(V.Local.sCustomer.Trim,=,"")
+		F.Intrinsic.UI.Msgbox("Please select at least one invoice before send it to customer.","Generate Invoices (6043)")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+	
+	F.Data.DataTable.Close("dtTemp")
+	
+	F.Intrinsic.String.Build("SELECT Cast(0 as BIT) as Flag, IF(C.FLAG_SENT<>'','Sent','') AS Status,RTRIM(A.Customer)+A.Invoice AS CustInv,A.Customer, A.INVOICE AS InvNumber, A.Date_Invoice As InvDate, A.Customer_PO as PONumber, D.InvTotal as TotalAmount FROM V_Order_Hist_Head A LEFT JOIN (Select * From GAB_6043_FTP_CUST WHERE Vendor_ID = '{0}') B ON A.CUSTOMER = B.CUSTOMER_ID Left Join GAB_6043_INVOICE C ON B.VENDOR_ID = C.VENDOR_ID AND B.CUSTOMER_ID = C.CUSTOMER_ID AND A.INVOICE = C.INVOICE Left Join (select Customer, Invoice, (SUM(Extension_Order)+SUM(Tax_Amt_1_Order)) AS InvTotal from ORDER_HIST_LINE Group By Customer, Invoice) D On A.Invoice = D.Invoice and A.Customer = D.Customer Where {1};",V.Args.sVendor.Trim,V.Local.sCustomer,V.Local.sSQL)
+	F.Data.DataTable.CreateFromSQL("dtCustomer","con",V.Local.sSQL,True)
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Build("SELECT Cast(0 as BIT) as Flag, IF(C.FLAG_SENT<>'','Sent','') AS Status,RTRIM(A.Customer)+A.Invoice AS CustInv,A.Customer, A.INVOICE AS InvNumber, A.Date_Invoice As InvDate, A.Customer_PO as PONumber, D.InvTotal as TotalAmount FROM V_Order_Hist_Head A LEFT JOIN (Select * From GAB_6043_FTP_CUST WHERE Vendor_ID = '{0}') B ON A.CUSTOMER = B.CUSTOMER_ID Left Join GAB_6043_INVOICE C ON B.VENDOR_ID = C.VENDOR_ID AND B.CUSTOMER_ID = C.CUSTOMER_ID AND A.INVOICE = C.INVOICE Left Join (select Customer, Invoice, (SUM(Extension_Order)+SUM(Tax_Amt_1_Order)) AS InvTotal from ORDER_HIST_LINE Group By Customer, Invoice) D On A.Invoice = D.Invoice and A.Customer = D.Customer;",V.Args.sVendor.Trim,V.Local.sCustomer,V.Local.sSQL)		
+	F.Data.DataTable.CreateFromSQL("dtCustomer","con",V.Local.sSQL,True)
+F.Intrinsic.Control.EndIf
+
+Gui.F_FTP.GsGCCust.AddGridviewFromDatatable("gvCUstomer","dtCustomer")
+Gui.F_FTP.GsGCCust.MainView("gvCUstomer")
+
+Gui.F_FTP.GsGCCust.SetGridviewProperty("gvCUstomer","Showgrouppanel",True)
+Gui.F_FTP.GsGCCust.SetGridviewProperty("gvCUstomer","AllowSort",True)
+Gui.F_FTP.GsGCCust.SetGridviewProperty("gvCUstomer","AllowFilter",True)
+
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","CustInv","Visible",False)
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Flag","ShowCaption",False)
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","InvNumber","Caption","Invoice")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","InvDate","Caption","Invoice Date")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","PONumber","Caption","Customer PO")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","TotalAmount","Caption","Total Invoice")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Status","HeaderHAlignment","Center")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","InvNumber","HeaderHAlignment","Center")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","InvDate","HeaderHAlignment","Center")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","PONumber","HeaderHAlignment","Center")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Customer","HeaderHAlignment","Center")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","TotalAmount","HeaderHAlignment","Center")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Status","CellHAlignment","Center")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Flag","MinWidth","50")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Status","MinWidth","50")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Customer","MinWidth","100")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","InvNumber","MinWidth","100")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","InvDate","MinWidth","100")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","PONumber","MinWidth","100")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","TotalAmount","MinWidth","100")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Flag","AllowEdit",True)
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Flag","ReadOnly",False)
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","InvDate","DisplayCustomDatetime","d")
+Gui.F_FTP.GsGCCust.Enabled(True)
+Gui.F_FTP.GsGCCust.Visible(True)
+Program.Sub.loadGSCustomer.End
+
+Program.Sub.cmdSave_click.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.iRet.Declare
+V.Local.sUsername.Declare
+V.Local.sPass.Declare
+V.Local.sHost.Declare
+V.Local.sPort.Declare
+V.Local.iFlag.Declare
+V.Local.sVendor.Declare
+V.Local.sSql.Declare
+V.Local.bConnected.Declare
+V.Local.i1.Declare
+V.Local.sCustomer.Declare
+V.Local.sFileExport.Declare
+V.Local.sControl.Declare
+V.Local.sMsg.Declare
+V.Local.bFileLocked.Declare
+v.Local.bExist.Declare
+V.Local.sTime.Declare
+V.Local.sFile.Declare
+V.Local.sDir.Declare
+
+F.Intrinsic.UI.InvokeWaitDialog("Please Wait...","Generate Invoices (6043)")
+F.Intrinsic.Control.If(V.DataTable.dtCsv.Exists,=,True)
+	F.Data.DataTable.Close("dtCsv")
+F.Intrinsic.Control.EndIf
+V.Local.sVendor.Set(V.Screen.F_FTP!txtVendor.Value)
+
+	F.Intrinsic.String.Build("select * from GAB_6043_FTP_Setup where Vendor_ID = '{0}'",V.Local.sVendor.Trim,V.Local.sSql)
+	F.ODBC.Connection!con.OpenLocalRecordsetRO("rst",V.Local.sSql)
+	F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,True)
+		F.Intrinsic.UI.Msgbox("Vendor ID is not found!")
+		F.Intrinsic.UI.CloseWaitDialog
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.Else
+		V.Local.iFlag.Set(v.ODBC.Con!rst.FieldVal!Flag_Secure)
+		V.Local.sUsername.Set(v.ODBC.Con!rst.FieldVal!Username)
+		V.Local.sPass.Set(v.ODBC.Con!rst.FieldVal!Pass)
+		V.Local.sPort.Set(v.ODBC.Con!rst.FieldVal!Port)
+		V.Local.sHost.Set(v.ODBC.Con!rst.FieldVal!Host)
+		V.Local.sDir.Set(v.ODBC.Con!rst.FieldVal!Directory)
+	F.Intrinsic.Control.EndIf
+	F.ODBC.con!rst.Close
+
+	F.Intrinsic.Control.For(V.Local.i1,0,V.DataTable.dtCustomer.RowCount--,1)
+		F.Intrinsic.Control.If(V.DataTable.dtCustomer(V.Local.i1).Flag!FieldVal,=, True)
+			F.Intrinsic.String.Build("select * from GAB_6043_Invoice where Vendor_ID = '{0}' and Customer_ID = '{1}' and Invoice = '{2}' and Date_Invoice = '{3}'",V.Local.sVendor.Trim, V.DataTable.dtCustomer(V.Local.i1).Customer!FieldValTrim, V.DataTable.dtCustomer(V.Local.i1).InvNumber!FieldValTrim, V.DataTable.dtCustomer(V.Local.i1).InvDate!FieldValPervasiveDate, V.Local.sSql)
+			F.ODBC.Connection!con.OpenLocalRecordsetRO("rst",V.Local.sSql)
+			F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,True)
+				F.Intrinsic.String.Build("insert into GAB_6043_Invoice(Vendor_ID,Customer_ID,Invoice,Date_Invoice,Flag_Sent) values('{0}','{1}','{2}','{3}',1)",V.Local.sVendor.Trim,V.DataTable.dtCustomer(V.Local.i1).Customer!FieldValTrim, V.DataTable.dtCustomer(V.Local.i1).InvNumber!FieldValTrim, V.DataTable.dtCustomer(V.Local.i1).InvDate!FieldValPervasiveDate,V.Local.sSql)
+				F.ODBC.Connection!con.Execute(V.Local.sSql)	
+			F.Intrinsic.Control.EndIf
+			F.ODBC.con!rst.Close
+			
+			F.Intrinsic.Control.If(V.Local.sCustomer.Trim,=,"")
+				F.Intrinsic.String.Build("RTRIM(A.Customer)+A.Invoice = '{0}'",V.DataTable.dtCustomer(V.Local.i1).CustInv!FieldVal,V.Local.sCustomer)
+			F.Intrinsic.Control.Else
+				F.Intrinsic.String.Build("{1} Or RTRIM(A.Customer)+A.Invoice = '{0}'",V.DataTable.dtCustomer(V.Local.i1).CustInv!FieldVal,V.Local.sCustomer,V.Local.sCustomer)
+			F.Intrinsic.Control.EndIf
+			F.Data.DataTable.SetValue("dtCustomer",V.Local.i1,"Status","Sent","Flag",0)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Next(V.Local.i1)
+	
+	F.Intrinsic.Control.If(V.Local.sCustomer.Trim,=,"")
+		F.Intrinsic.UI.Msgbox("Please select at least one invoice before send it to customer.","Generate Invoices (6043)")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.String.Build("SELECT 'Halliburton' as CustomerName, RTRIM(A.Customer) as CustomerID, RTRIM('{0}') as VendorID, A.ORDER_CURRENCY AS Currency,'' As RemitToName,'' As RemitToAddr1,'' As RemitToAddr2, '' As RemitToCity, '' As RemitToState, '' As RemitToPostalCd, '' As RemitToCountry, '' As RemitToPhone, '' As RemitToFax, '' As RemitToEmail, RTRIM(A.Name_Cust_Ship) as ShipToLoc, RTRIM(A.Address1_Ship) as ShippingAddr1, RTRIM(A.Address2_Ship) as ShippingAddr2, RTRIM(A.City_Ship) As ShippingCity, RTRIM(A.State_Ship) AS ShippingState, RTRIM(A.Zip_Ship) as ShippingPostalCode, RTRIM(A.Country_Ship) AS ShippingCountry, RTRIM(C.Contact) As ContactName, RTRIM(C.Contact_Phone) as ContactPhone, RTRIM(A.INVOICE) AS InvNumber, CAST(A.DATE_INVOICE AS CHAR(10)) As InvDate, RTRIM(A.Customer_PO) as PONumber, E.TotalTaxesOnInv as TotalTaxesOnInv, '' as ExemptReason, E.InvTotal as TotalAmount, A.FREIGHT_PER_PIECE as Freight, 0 as Other, '' As SpecialCharge1, '' AS SpecialCharge2, '' AS SpecialCharge3, '' AS SpecialCharge4, if(A.CREDIT_MEMO_FLAG = 'Y', 'TRUE', 'FALSE') AS CreditIndicator, '' AS DeliveryNote, '' AS Comments, '' AS CustomField1, '' AS CustomField2, RTRIM(A.Name_Cust_Ship) AS CustomField3, '' as CustomField4, If(A.Customer_PO<>'','',A.Order_No) as CustomField5, RTRIM(A.User_5) as POLineNumber, RTRIM(Description) as PartDescription, A.Qty_Shipped as Quantity, RTRIM(A.UM) as UoM, A.Price as UnitPrice, Tax_Amt_1 AS LineTaxAmount, Tax_Rate_1 AS LineTaxRate, '' AS LineTaxType, '' AS	Discount, '' AS DeliveryNote, '' AS CustomField1, '' AS CustomField2, '' AS CustomField3, '' AS CustomField4, '' AS CustomField5, '' AS CustomField6, '' AS CustomField7, '' AS CustomField8, '' AS CustomField9, '' AS CustomField10, '' AS CustomField11, '' AS CustomField12, '' AS CustomField13, '' AS CustomField14, '' AS CustomField15 FROM V_ORDER_HIST_LINE A LEFT JOIN (Select * From GAB_6043_FTP_CUST WHERE Vendor_ID = '{0}') B ON A.CUSTOMER = B.CUSTOMER_ID Left Join (Select A.Invoice, A.Customer, A.Contact, A.Contact_Phone FROM V_ORDER_HIST_HEAD A) C On A.Invoice = C.Invoice and A.Customer = C.Customer Left Join GAB_6043_INVOICE D ON B.VENDOR_ID = D.VENDOR_ID AND B.CUSTOMER_ID = D.CUSTOMER_ID AND A.INVOICE = D.INVOICE LEFT JOIN (select Customer, Invoice, (SUM(Extension_Order)+SUM(Tax_Amt_1_Order)) AS InvTotal, SUM(Tax_Amt_1_Order) AS TotalTaxesOnInv from ORDER_HIST_LINE Group By Customer, Invoice) E On A.Invoice = E.invoice and A.Customer = E.Customer Where {1};",V.Local.sVendor.Trim,V.Local.sCustomer.Trim,V.Local.sSQL)
+	F.Data.DataTable.CreateFromSQL("dtCsv","con",V.Local.sSQL,True)
+
+	F.Intrinsic.String.Build("{0}\GAB_6043",V.Caller.FilesDir,V.Local.sFileExport)
+	f.Intrinsic.File.DirExists(V.Local.sFileExport,v.Local.bExist)
+	F.Intrinsic.String.Replace(V.Ambient.Time.PSQLFriendly,":","",V.Local.sTime)
+	F.Intrinsic.String.Build("SalesInvoice-{2}-{3}.csv",V.Caller.FilesDir,"GAB_6043\",V.Ambient.Date.PervasiveDate,V.Local.sTime,V.Local.sFile)
+	f.Intrinsic.Control.If(v.Local.bExist,=,True)
+		F.Intrinsic.String.Build("{0}\{1}{2}",V.Caller.FilesDir,"GAB_6043\",V.Local.sFile.Trim,V.Local.sFileExport)
+		f.Data.DataTable.SaveToCSV("dtCsv",V.Local.sFileExport,True)
+	f.Intrinsic.Control.Else
+		f.Intrinsic.File.CreateDir(V.Local.sFileExport)
+		F.Intrinsic.String.Build("{0}\{1}{2}",V.Caller.FilesDir,"GAB_6043\",V.Local.sFile.Trim,V.Local.sFileExport)
+		f.Data.DataTable.SaveToCSV("dtCsv",V.Local.sFileExport,True)
+	f.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.If(V.Local.iFlag,=,0)
+		'logon credentials.
+		f.Communication.FTP.SetProperty("SSHAcceptServerAuthentication","true")
+		f.Communication.FTP.SetProperty("remoteHost", V.Local.sHost.Trim)
+		f.Communication.FTP.SetProperty("User", V.Local.sUsername.Trim)
+		f.Communication.FTP.SetProperty("Password", V.Local.sPass.Trim)
+		f.Communication.FTP.SetProperty("remotePort", V.Local.sPort.Trim)
+		f.Communication.FTP.SetProperty("RemotePath", V.Local.sDir.Trim)
+		f.Communication.FTP.Logon
+
+		F.Communication.FTP.SetProperty("LocalFile",V.Local.sFileExport.Trim)
+		F.Communication.FTP.SetProperty("RemoteFile",V.Local.sFile.Trim)
+		F.Communication.FTP.SetProperty("TransferMode",2)
+		F.Communication.FTP.Upload
+		f.Communication.FTP.Logoff
+
+	F.Intrinsic.Control.Else
+		'logon credentials using Secure FTP.
+		f.Communication.SFTP.SetProperty("SSHAcceptServerAuthentication","true")
+		f.Communication.SFTP.SetProperty("remoteHost", V.Local.sHost.Trim)
+		f.Communication.SFTP.SetProperty("User", V.Local.sUsername.Trim)
+		f.Communication.SFTP.SetProperty("Password", V.Local.sPass.Trim)
+		f.Communication.SFTP.SetProperty("remotePort", V.Local.sPort.Trim)
+		f.Communication.SFTP.SetProperty("RemotePath", V.Local.sDir.Trim)		
+		f.Communication.SFTP.Logon
+
+		F.Communication.SFTP.SetProperty("LocalFile",V.Local.sFileExport.Trim)
+		F.Communication.SFTP.SetProperty("RemoteFile",V.Local.sFile.Trim)
+		F.Communication.SFTP.SetProperty("TransferMode",2)
+		F.Communication.SFTP.Upload
+		f.Communication.SFTP.Logoff
+
+	Function.Intrinsic.Control.EndIf
+	F.Data.DataTable.Close("dtCsv")
+	
+	F.Intrinsic.UI.Msgbox("Done!","Generate Invoices (6043)")
+	
+V.Local.sError.Declare(String)
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GAB_6043_Generate_Invoice.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.String.Concat(V.Local.sError,V.Ambient.NewLine,"Last Action: ",V.Ambient.NewLine,V.Ambient.LastAction,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+F.Intrinsic.UI.CloseWaitDialog
+Program.Sub.cmdSave_click.End
+
+Program.Sub.GSGCCust_RowCellClick.Start
+	F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+
+	V.Local.iRet.Declare
+	V.Local.sType.Declare
+	V.Local.sAPPROVE.Declare
+	V.Local.fZERO.Declare
+
+'	F.Intrinsic.Control.SelectCase(V.Args.Column)
+'		F.Intrinsic.Control.Case("Flag")
+	F.Intrinsic.Control.If(V.Args.Column,=,"Flag")
+		F.Intrinsic.Control.If(V.DataTable.dtCustomer(V.Args.RowIndex).Flag!FieldVal,=,False)
+			F.Data.DataTable.SetValue("dtCustomer",V.Args.RowIndex,"Flag",True)
+		F.Intrinsic.Control.ElseIf(V.DataTable.dtCustomer(V.Args.RowIndex).Flag!FieldVal,=,True)
+			F.Data.DataTable.SetValue("dtCustomer",V.Args.RowIndex,"Flag",False)
+			F.Intrinsic.String.Build("select * from GAB_6043_FTP_CUST where Vendor_ID = '{0}' and Customer_ID = '{1}'",V.Screen.F_FTP!txtVendor.Value,V.DataTable.dtCustomer(V.Args.RowIndex).Customer!FieldValTrim,V.Local.sSql)
+			F.ODBC.Connection!con.OpenLocalRecordsetRO("rst",V.Local.sSql)
+			F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+				F.Intrinsic.String.Build("Delete GAB_6043_FTP_CUST where Vendor_ID = '{0}' and Customer_ID = '{1}'",V.Screen.F_FTP!txtVendor.Value,V.DataTable.dtCustomer(V.Args.RowIndex).Customer!FieldValTrim,V.Local.sSql)
+				F.ODBC.Connection!con.Execute(V.Local.sSql)
+			F.Intrinsic.Control.EndIf
+			F.ODBC.con!rst.Close			
+		F.Intrinsic.Control.EndIf
+'	F.Intrinsic.Control.EndSelect
+	F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.Catch
+		F.Intrinsic.String.Build("Project: GAB_6043_Generate_Invoice.g2u{0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}.",V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+		F.Intrinsic.UI.Msgbox(V.Local.sError)
+		F.Intrinsic.Control.End 
+	F.Intrinsic.Control.EndTry
+Program.Sub.GSGCCust_RowCellClick.End
+
+Program.Sub.Comments.Start
+${$5$}$3.0.0.0$}$1
+${$6$}$dyunus$}$20200722091124278$}$xZ6SHi8g7O0Qsxe6AiO2NH3PnOKQRy0Tf/tkEvwYUaSEY+Jsq6HY8eog0dZZTSSismt6JFQtdCE=
+Program.Sub.Comments.End
