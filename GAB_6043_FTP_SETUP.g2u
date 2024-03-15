@@ -1,0 +1,491 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.F_FTP..Create(BaseForm)
+Gui.F_FTP..Caption("Customer's FTP Setup")
+Gui.F_FTP..Size(1024,720)
+Gui.F_FTP..MinX(0)
+Gui.F_FTP..MinY(0)
+Gui.F_FTP..Position(0,0)
+Gui.F_FTP..AlwaysOnTop(False)
+Gui.F_FTP..FontName("Tahoma")
+Gui.F_FTP..FontSize(8.25)
+Gui.F_FTP..ControlBox(True)
+Gui.F_FTP..MaxButton(True)
+Gui.F_FTP..MinButton(True)
+Gui.F_FTP..MousePointer(0)
+Gui.F_FTP..Moveable(True)
+Gui.F_FTP..Sizeable(True)
+Gui.F_FTP..ShowInTaskBar(True)
+Gui.F_FTP..TitleBar(True)
+Gui.F_FTP..Event(UnLoad,Unload)
+Gui.F_FTP.lbl1.Create(Label,"Vendor ID",True,48,13,0,29,25,True,0,"Tahoma",8.25,,0,0)
+Gui.F_FTP.lbl1.BorderStyle(0)
+Gui.F_FTP.txtVendor.Create(TextBox,"",True,224,20,0,25,53,True,0,"Tahoma",8.25,,1)
+Gui.F_FTP.lbl2.Create(Label,"User Name",True,52,13,0,29,96,True,0,"Tahoma",8.25,,0,0)
+Gui.F_FTP.lbl2.BorderStyle(0)
+Gui.F_FTP.txtUserName.Create(TextBox,"",True,224,20,0,25,119,True,0,"Tahoma",8.25,,1)
+Gui.F_FTP.lbl3.Create(Label,"Password",True,46,13,0,29,161,True,0,"Tahoma",8.25,,0,0)
+Gui.F_FTP.lbl3.BorderStyle(0)
+Gui.F_FTP.txtPASS.Create(TextBox,"",True,224,20,0,23,186,True,0,"Tahoma",8.25,,1)
+Gui.F_FTP.lbl4.Create(Label,"Remote Host",True,62,13,0,385,95,True,0,"Tahoma",8.25,,0,0)
+Gui.F_FTP.lbl4.BorderStyle(0)
+Gui.F_FTP.txtHost.Create(TextBox,"",True,224,20,0,379,123,True,0,"Tahoma",8.25,,1)
+Gui.F_FTP.lbl5.Create(Label,"Remote Port",True,60,13,0,383,160,True,0,"Tahoma",8.25,,0,0)
+Gui.F_FTP.lbl5.BorderStyle(0)
+Gui.F_FTP.txtPort.Create(TextBox,"",True,224,20,0,378,189,True,0,"Tahoma",8.25,,1)
+Gui.F_FTP.chkSecure.Create(CheckBox)
+Gui.F_FTP.chkSecure.Enabled(True)
+Gui.F_FTP.chkSecure.Visible(True)
+Gui.F_FTP.chkSecure.Zorder(0)
+Gui.F_FTP.chkSecure.Size(75,20)
+Gui.F_FTP.chkSecure.Position(380,52)
+Gui.F_FTP.chkSecure.Caption("Secure FTP")
+Gui.F_FTP.chkSecure.FontName("Tahoma")
+Gui.F_FTP.chkSecure.FontSize(8.25)
+Gui.F_FTP.cmdSave.Create(Button)
+Gui.F_FTP.cmdSave.Enabled(True)
+Gui.F_FTP.cmdSave.Visible(True)
+Gui.F_FTP.cmdSave.Zorder(0)
+Gui.F_FTP.cmdSave.Size(75,23)
+Gui.F_FTP.cmdSave.Position(25,219)
+Gui.F_FTP.cmdSave.Caption("Save")
+Gui.F_FTP.cmdSave.FontName("Tahoma")
+Gui.F_FTP.cmdSave.FontSize(8.25)
+Gui.F_FTP.cmdSave.Event(Click,CmdSave_Click)
+Gui.F_FTP.cmdBrowser.Create(Button)
+Gui.F_FTP.cmdBrowser.Enabled(True)
+Gui.F_FTP.cmdBrowser.Visible(True)
+Gui.F_FTP.cmdBrowser.Zorder(0)
+Gui.F_FTP.cmdBrowser.Size(75,23)
+Gui.F_FTP.cmdBrowser.Position(262,51)
+Gui.F_FTP.cmdBrowser.Caption("Browse")
+Gui.F_FTP.cmdBrowser.FontName("Tahoma")
+Gui.F_FTP.cmdBrowser.FontSize(8.25)
+Gui.F_FTP.cmdBrowser.Event(Click,CmdBrowse_Click)
+Gui.F_FTP.GsGCCust.Create(GsGridControl)
+Gui.F_FTP.GsGCCust.Enabled(True)
+Gui.F_FTP.GsGCCust.Visible(True)
+Gui.F_FTP.GsGCCust.Zorder(0)
+Gui.F_FTP.GsGCCust.Size(972,395)
+Gui.F_FTP.GsGCCust.Position(22,269)
+Gui.F_FTP.GsGCCust.Event(RowCellClick,GSGCCust_RowCellClick)
+Gui.F_FTP.cmdDelete.Create(Button)
+Gui.F_FTP.cmdDelete.Enabled(True)
+Gui.F_FTP.cmdDelete.Visible(True)
+Gui.F_FTP.cmdDelete.Zorder(0)
+Gui.F_FTP.cmdDelete.Size(75,23)
+Gui.F_FTP.cmdDelete.Position(213,219)
+Gui.F_FTP.cmdDelete.Caption("Delete")
+Gui.F_FTP.cmdDelete.FontName("Tahoma")
+Gui.F_FTP.cmdDelete.FontSize(8.25)
+Gui.F_FTP.cmdDelete.Event(Click,CmdDelete_Click)
+Gui.F_FTP.cmdClear.Create(Button)
+Gui.F_FTP.cmdClear.Enabled(True)
+Gui.F_FTP.cmdClear.Visible(True)
+Gui.F_FTP.cmdClear.Zorder(0)
+Gui.F_FTP.cmdClear.Size(75,23)
+Gui.F_FTP.cmdClear.Position(120,219)
+Gui.F_FTP.cmdClear.Caption("Clear")
+Gui.F_FTP.cmdClear.FontName("Tahoma")
+Gui.F_FTP.cmdClear.FontSize(8.25)
+Gui.F_FTP.cmdClear.Event(Click,CmdClear_Click)
+Gui.F_FTP.lbl6.Create(Label,"Directory",True,44,13,0,694,94,True,0,"Tahoma",8.25,,0,0)
+Gui.F_FTP.lbl6.BorderStyle(0)
+Gui.F_FTP.txtDir.Create(TextBox,"",True,224,20,0,688,122,True,0,"Tahoma",8.25,,1)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+V.Local.sSQL.Declare
+V.Local.sVendor.Declare
+V.Local.bExist.Declare
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+
+F.ODBC.Connection!con.OpenCompanyConnection(300)
+
+F.ODBC.Connection!con.TableExists("GAB_6043_INVOICE",V.Local.bExist)
+F.Intrinsic.Control.If(V.Local.bExist,=,False)
+	F.ODBC.Connection!con.Execute("CREATE TABLE GAB_6043_INVOICE(VENDOR_ID CHAR(10),CUSTOMER_ID CHAR(6),INVOICE CHAR(7),DATE_INVOICE DATE,FLAG_SENT BIT DEFAULT '0' NOT NULL );")
+F.Intrinsic.Control.EndIf
+
+F.ODBC.Connection!con.TableExists("GAB_6043_FTP_CUST",V.Local.bExist)
+F.Intrinsic.Control.If(V.Local.bExist,=,False)
+	F.ODBC.Connection!con.Execute("CREATE TABLE GAB_6043_FTP_CUST (VENDOR_ID CHAR(10) NOT NULL,CUSTOMER_ID CHAR(6) NOT NULL,CUSTOMER_NAME CHAR(60) );")
+F.Intrinsic.Control.EndIf
+
+F.ODBC.Connection!con.TableExists("GAB_6043_FTP_SETUP",V.Local.bExist)
+F.Intrinsic.Control.If(V.Local.bExist,=,False)
+	F.ODBC.Connection!con.Execute("CREATE TABLE GAB_6043_FTP_SETUP (VENDOR_ID CHAR(10) NOT NULL,USERNAME CHAR(30),PASS CHAR(30),HOST CHAR(100),PORT CHAR(4),DIRECTORY CHAR(100),FLAG_SECURE BIT DEFAULT '0' NOT NULL );")
+F.Intrinsic.Control.EndIf
+
+Gui.F_FTP.GsGCCust.Anchor(15)
+F.Intrinsic.Control.CallSub(LoadGSCustomer,"sVendor","")
+
+Gui.F_FTP..Show
+
+Program.Sub.Main.End
+
+Program.Sub.Unload.Start
+V.Local.sSQL.Declare
+V.Local.sVendor.Declare
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+
+F.ODBC.Connection!con.Close
+F.Intrinsic.Control.End
+
+Program.Sub.Unload.End
+
+Program.Sub.cmdbrowse_click.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.iRet.Declare
+Variable.Local.sRet.Declare(String)
+Variable.Local.sTemp.Declare(String)
+Variable.Local.sTitles.Declare(String)
+Variable.Local.iWidths.Declare(Long)
+V.Local.sPart.Declare
+V.Local.sSQL.Declare
+
+V.Local.iLength.Declare(Long)
+
+'Function.Intrinsic.String.Split("Vendor ID*!*","*!*",Variable.local.sTitles)
+'Function.Intrinsic.String.Split("500*!*","*!*",Variable.local.iWidths)
+
+Variable.local.sTitles.Set("Vendor ID")
+Variable.local.iWidths.Set(500)
+
+F.Intrinsic.Debug.SetLA("Generating browser")
+F.Intrinsic.UI.SetBrowserOOT(True)
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+F.Intrinsic.UI.Browser("Select Vendor ID","con","SELECT VENDOR_ID FROM GAB_6043_FTP_SETUP",V.Local.sTitles,V.Local.iWidths,V.Local.sRet)
+F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	gui.F_FTP.txtVendor.Text(V.Local.sRet(0).Trim)
+	
+	F.Intrinsic.String.Build("Select * From GAB_6043_FTP_SETUP where Vendor_ID='{0}'",V.Local.sRet(0).Trim,V.Local.sSQL)
+	F.ODBC.Connection!con.OpenLocalRecordsetRO("rst",V.Local.sSql)
+	F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+		gui.F_FTP.txtUsername.Text(V.ODBC.con!rst.FieldVal!Username)
+		gui.F_FTP.txtPASS.Text(V.ODBC.con!rst.FieldVal!Pass)
+		gui.F_FTP.txtHost.Text(V.ODBC.con!rst.FieldVal!Host)
+		gui.F_FTP.txtPort.Text(V.ODBC.con!rst.FieldVal!Port)
+		gui.F_FTP.chkSecure.Value(V.ODBC.con!rst.FieldVal!Flag_Secure)
+	F.Intrinsic.Control.Else
+		gui.F_FTP.txtUsername.Text("")
+		gui.F_FTP.txtPASS.Text("")
+		gui.F_FTP.txtHost.Text("")
+		gui.F_FTP.txtPort.Text("")
+	F.Intrinsic.Control.EndIf
+	F.ODBC.con!rst.Close
+		
+'		F.Intrinsic.Control.CallSub(LoadgsCustomer,"sVendor",V.Local.sRet(0).Trim,"sUsername",V.Local.sRet(1).Trim,"sPASS",V.Local.sRet(2).Trim,"sHost",V.Local.sRet(3).Trim),"sPort",V.Local.sRet(4).Trim)
+		F.Intrinsic.Control.CallSub(LoadgsCustomer,"sVendor",V.Local.sRet(0).Trim)
+'	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Else
+	F.Intrinsic.UI.Msgbox("Vendor ID is not selected","NOTIFICATION")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+V.Local.sError.Declare(String)
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GAB_5003_PRICE_REVIEW.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.String.Concat(V.Local.sError,V.Ambient.NewLine,"Last Action: ",V.Ambient.NewLine,V.Ambient.LastAction,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.cmdbrowse_click.End
+
+Program.Sub.loadGSCustomer.Start
+V.Local.bInString.Declare(Boolean)
+
+V.Local.i1.Declare(Long)
+V.Local.iLen.Declare(Long)
+
+V.Local.sCust.Declare(String)
+V.Local.sDesc.Declare(String)
+V.Local.sDropdown.Declare(String)
+V.Local.sPartQuote.Declare(String)
+V.Local.sSql.Declare(String)
+V.Local.sRev.Declare(String)
+V.Local.sWO.Declare(String)
+V.Local.sWOSuffix.Declare(String)
+V.Local.sVendor.Declare
+
+'gui.F_FTP.lblProcess.Visible(True)
+'gui.F_FTP.dropdownlist1.Enabled(False)
+'gui.F_FTP.cmdShowAll.Enabled(False)
+'gui.F_FTP.txt1.Enabled(False)
+'gui.F_FTP.cmdBrowsePart.Enabled(False)
+'Gui.F_FTP.tab1.Visible(False)
+'gui.F_FTP.dropdownlist1.ClearItems
+'gui.F_FTP.dropdownlist1.Text("")
+'gui.F_FTP.gsflexgrid1.Rows(1)
+'gui.F_FTP.gsflexgrid2.Rows(1)
+
+'Load information from V_QUOTE_LINES based on the selected part number
+F.Intrinsic.Control.If(V.DataTable.dtCustomer.Exists,=,True)
+	F.Data.DataTable.Close("dtCustomer")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Args.sVendor.Trim,<>,"")
+	F.Intrinsic.String.Build("SELECT IF(B.CUSTOMER_ID<>'',Cast(1 as BIT),Cast(0 as BIT)) as Flag,A.CUSTOMER, A.NAME_CUSTOMER as CustomerName FROM V_CUSTOMER_MASTER A LEFT JOIN (Select * From GAB_6043_FTP_CUST WHERE VENDOR_ID = '{0}') B ON A.CUSTOMER = B.CUSTOMER_ID",V.Args.sVendor.Trim,V.Local.sSQL)	
+	F.Data.DataTable.CreateFromSQL("dtCustomer","con",V.Local.sSQL,True)
+F.Intrinsic.Control.Else
+	F.Data.DataTable.CreateFromSQL("dtCustomer","con","SELECT Cast(0 as BIT) as FLAG,A.CUSTOMER, A.NAME_CUSTOMER as CustomerName FROM V_CUSTOMER_MASTER A",True)
+F.Intrinsic.Control.EndIf
+
+Gui.F_FTP.GsGCCust.AddGridviewFromDatatable("gvCUstomer","dtCustomer")
+Gui.F_FTP.GsGCCust.MainView("gvCUstomer")
+
+Gui.F_FTP.GsGCCust.SetGridviewProperty("gvCUstomer","Showgrouppanel",True)
+Gui.F_FTP.GsGCCust.SetGridviewProperty("gvCUstomer","AllowSort",True)
+Gui.F_FTP.GsGCCust.SetGridviewProperty("gvCUstomer","AllowFilter",True)
+
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Flag","ShowCaption",False)
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","CustomerName","Caption","Customer Name")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","CustomerName","HeaderHAlignment","Center")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Customer","HeaderHAlignment","Center")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Flag","MinWidth","50")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Customer","MinWidth","100")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","CustomerName","MinWidth","290")
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","CustomerName","AllowEdit",True)
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","CustomerName","ReadOnly",False)
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Flag","AllowEdit",True)
+Gui.F_FTP.GsGCCust.SetColumnProperty("gvCUstomer","Flag","ReadOnly",False)
+
+Program.Sub.loadGSCustomer.End
+Program.Sub.cmdSave_click.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.iRet.Declare
+V.Local.sUsername.Declare
+V.Local.sPass.Declare
+V.Local.sHost.Declare
+V.Local.sPort.Declare
+V.Local.iFlag.Declare
+V.Local.sVendor.Declare
+V.Local.sSql.Declare
+V.Local.bConnected.Declare
+V.Local.i1.Declare
+V.Local.sDir.Declare
+
+F.Intrinsic.UI.InvokeWaitDialog("Test Connection And Save Records in Process, Please Wait...","FTP Setup (6043)")
+
+V.Local.sVendor.Set(V.Screen.F_FTP!txtVendor.Value)
+V.Local.sUsername.Set(V.Screen.F_FTP!txtUsername.Value)
+V.Local.sPass.Set(V.Screen.F_FTP!txtPASS.Value)
+V.Local.sHost.Set(V.Screen.F_FTP!txtHost.Value)
+V.Local.sPort.Set(V.Screen.F_FTP!txtPort.Value)
+V.Local.iFlag.Set(V.Screen.F_FTP!ChkSecure.Value)
+V.Local.sDir.Set(V.Screen.F_FTP!txtDir.Value)
+F.Intrinsic.String.Build("/{0}/",V.Local.sDir.Trim,V.Local.sDir)
+
+
+	F.Intrinsic.Control.If(V.Local.iFlag,=,0)
+		'logon credentials.
+		f.Communication.FTP.SetProperty("SSHAcceptServerAuthentication","true")
+		f.Communication.FTP.SetProperty("remoteHost", V.Local.sHost.Trim)
+		f.Communication.FTP.SetProperty("User", V.Local.sUsername.Trim)
+		f.Communication.FTP.SetProperty("Password", V.Local.sPass.Trim)
+		f.Communication.FTP.SetProperty("remotePort", V.Local.sPort.Trim)
+		f.Communication.FTP.SetProperty("RemotePath", V.Local.sDir.Trim)
+		f.Communication.FTP.Logon
+
+		F.Communication.FTP.ReadProperty("connected",V.Local.bConnected)
+		F.Intrinsic.Control.If(V.Local.bConnected,=,True)
+		    f.Intrinsic.UI.Msgbox("CONNECTED!")
+	    	f.Communication.FTP.Logoff
+		F.Intrinsic.Control.Else
+		    f.Intrinsic.UI.Msgbox("FAILED!")
+		    F.Intrinsic.Control.ExitSub
+		F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.Control.Else
+		'logon credentials using Secure FTP.
+		f.Communication.SFTP.SetProperty("SSHAcceptServerAuthentication","true")
+		f.Communication.SFTP.SetProperty("remoteHost", V.Local.sHost.Trim)
+		f.Communication.SFTP.SetProperty("User", V.Local.sUsername.Trim)
+		f.Communication.SFTP.SetProperty("Password", V.Local.sPass.Trim)
+		f.Communication.SFTP.SetProperty("remotePort", V.Local.sPort.Trim)
+		f.Communication.SFTP.SetProperty("RemotePath", V.Local.sDir.Trim)
+		f.Communication.SFTP.Logon
+
+		F.Communication.SFTP.ReadProperty("connected",V.Local.bConnected)
+		F.Intrinsic.Control.If(V.Local.bConnected,=,True)
+		    f.Intrinsic.UI.Msgbox("CONNECTED!")
+	    	f.Communication.SFTP.Logoff
+		F.Intrinsic.Control.Else
+		    f.Intrinsic.UI.Msgbox("FAILED!")
+		    F.Intrinsic.Control.ExitSub
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.String.Build("select * from GAB_6043_FTP_Setup where Vendor_ID = '{0}'",V.Local.sVendor.Trim,V.Local.sSql)
+	F.ODBC.Connection!con.OpenLocalRecordsetRO("rst",V.Local.sSql)
+	F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,True)
+		F.Intrinsic.String.Build("insert into GAB_6043_FTP_Setup(Vendor_ID,Username,PASS,Host,Port,DIRECTORY,Flag_Secure) values('{0}','{1}','{2}','{3}','{4}','{5}',{6})",V.Local.sVendor.Trim,V.Local.sUsername.Trim,V.Local.sPass.Trim,V.Local.sHost.Trim,V.Local.sPort.Trim,V.Local.sDir.Trim, v.Local.iFlag,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+	F.Intrinsic.Control.Else
+		F.Intrinsic.String.Build("update GAB_6043_FTP_Setup set Username = '{0}', PASS = '{1}', Host = '{2}', Port = '{3}', Directory = '{4}', Flag_Secure = {5} where Vendor_ID = '{6}'",V.Local.sUsername.Trim, V.Local.sPass.Trim, V.Local.sHost.Trim, V.Local.sPort.Trim, V.Local.sDir.Trim, v.Local.iFlag,V.Local.sVendor.Trim,V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+	F.Intrinsic.Control.EndIf
+	F.ODBC.con!rst.Close
+	
+	F.Intrinsic.Control.For(V.Local.i1,0,V.DataTable.dtCustomer.RowCount--,1)
+		F.Intrinsic.String.Build("select * from GAB_6043_FTP_CUST where Vendor_ID = '{0}' and Customer_ID = '{1}'",V.Local.sVendor.Trim,V.DataTable.dtCustomer(V.Local.i1).Customer!FieldValTrim,V.Local.sSql)
+		F.ODBC.Connection!con.OpenLocalRecordsetRO("rst",V.Local.sSql)
+		F.Intrinsic.Control.If(V.DataTable.dtCustomer(V.Local.i1).Flag!FieldVal,=,True)
+			F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,True)
+				F.Intrinsic.String.Build("insert into GAB_6043_FTP_CUST(Vendor_ID,Customer_ID,Customer_Name) values('{0}','{1}','{2}')",V.Local.sVendor.Trim,V.DataTable.dtCustomer(V.Local.i1).Customer!FieldValTrim,V.DataTable.dtCustomer(V.Local.i1).CustomerName!FieldValTrim,V.Local.sSql)
+				F.ODBC.Connection!con.Execute(V.Local.sSql)
+			F.Intrinsic.Control.Else
+				F.Intrinsic.String.Build("Update GAB_6043_FTP_CUST Set Customer_Name = '{2}' where Vendor_ID = '{0}' and Customer_ID = '{1}'",V.Local.sVendor.Trim,V.DataTable.dtCustomer(V.Local.i1).Customer!FieldValTrim,V.DataTable.dtCustomer(V.Local.i1).CustomerName!FieldValTrim,V.Local.sSql)
+				F.ODBC.Connection!con.Execute(V.Local.sSql)
+			F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.Else
+			F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)	
+				F.Intrinsic.String.Build("Delete GAB_6043_FTP_CUST where Vendor_ID = '{0}' and Customer_ID = '{1}'",V.Screen.F_FTP!txtVendor.Value,V.DataTable.dtCustomer(V.Local.i1).Customer!FieldValTrim,V.Local.sSql)
+				F.ODBC.Connection!con.Execute(V.Local.sSql)
+			F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.EndIf
+		F.ODBC.con!rst.Close		
+	F.Intrinsic.Control.Next(V.Local.i1)
+
+F.Intrinsic.UI.CloseWaitDialog
+V.Local.sError.Declare(String)
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.UI.CloseWaitDialog
+	Function.Intrinsic.String.Concat("Project: GAB_6043_FTP_Setup.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.String.Concat(V.Local.sError,V.Ambient.NewLine,"Last Action: ",V.Ambient.NewLine,V.Ambient.LastAction,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.cmdSave_click.End
+
+Program.Sub.GSGCCust_RowCellClick.Start
+	F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+
+	V.Local.iRet.Declare
+	V.Local.sType.Declare
+	V.Local.sAPPROVE.Declare
+	V.Local.fZERO.Declare
+
+'	F.Intrinsic.Control.SelectCase(V.Args.Column)
+'		F.Intrinsic.Control.Case("Flag")
+	F.Intrinsic.Control.If(V.Args.Column,=,"Flag")
+		F.Intrinsic.Control.If(V.DataTable.dtCustomer(V.Args.RowIndex).Flag!FieldVal,=,False)
+			F.Data.DataTable.SetValue("dtCustomer",V.Args.RowIndex,"Flag",True)
+		F.Intrinsic.Control.ElseIf(V.DataTable.dtCustomer(V.Args.RowIndex).Flag!FieldVal,=,True)
+			F.Data.DataTable.SetValue("dtCustomer",V.Args.RowIndex,"Flag",False)
+			F.Intrinsic.String.Build("select * from GAB_6043_FTP_CUST where Vendor_ID = '{0}' and Customer_ID = '{1}'",V.Screen.F_FTP!txtVendor.Value,V.DataTable.dtCustomer(V.Args.RowIndex).Customer!FieldValTrim,V.Local.sSql)
+			F.ODBC.Connection!con.OpenLocalRecordsetRO("rst",V.Local.sSql)
+			F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+				F.Intrinsic.String.Build("Delete GAB_6043_FTP_CUST where Vendor_ID = '{0}' and Customer_ID = '{1}'",V.Screen.F_FTP!txtVendor.Value,V.DataTable.dtCustomer(V.Args.RowIndex).Customer!FieldValTrim,V.Local.sSql)
+				F.ODBC.Connection!con.Execute(V.Local.sSql)
+			F.Intrinsic.Control.EndIf
+			F.ODBC.con!rst.Close			
+		F.Intrinsic.Control.EndIf
+'	F.Intrinsic.Control.EndSelect
+	F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.Catch
+		F.Intrinsic.String.Build("Project: GAB_6043_FTP_Setup.g2u{0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}.",V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+		F.Intrinsic.UI.Msgbox(V.Local.sError)
+		F.Intrinsic.Control.End 
+	F.Intrinsic.Control.EndTry
+Program.Sub.GSGCCust_RowCellClick.End
+
+Program.Sub.cmdDelete_click.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.iRet.Declare
+V.Local.sUsername.Declare
+V.Local.sPass.Declare
+V.Local.sHost.Declare
+V.Local.sPort.Declare
+V.Local.iFlag.Declare
+V.Local.sVendor.Declare
+V.Local.sSql.Declare
+V.Local.bConnected.Declare
+V.Local.i1.Declare
+
+V.Local.sVendor.Set(V.Screen.F_FTP!txtVendor.Value)
+
+	F.Intrinsic.String.Build("Delete Vendor #{0} ?",V.Local.sVendor.Trim,V.Local.sSql)
+	F.Intrinsic.UI.Msgbox(V.Local.sSql,"FTP Setup (6043)",4,V.Local.iRet)
+	F.Intrinsic.Control.If(V.Local.iRet,=,6)
+		F.Intrinsic.String.Build("Delete GAB_6043_FTP_CUST where Vendor_ID = '{0}'",V.Local.sVendor.Trim,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+		F.Intrinsic.String.Build("Delete GAB_6043_FTP_Setup where Vendor_ID = '{0}'",V.Local.sVendor.Trim,V.Local.sSql)
+		F.ODBC.Connection!con.Execute(V.Local.sSql)
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.UI.Msgbox("Done!","FTP Setup (6043)")
+
+	gui.F_FTP.txtVendor.Text("")
+	gui.F_FTP.txtUsername.Text("")
+	gui.F_FTP.txtPASS.Text("")
+	gui.F_FTP.txtHost.Text("")
+	gui.F_FTP.txtPort.Text("")	
+	gui.F_FTP.txtDir.Text("")
+	F.Intrinsic.Control.CallSub(LoadGSCustomer,"sVendor","")
+
+V.Local.sError.Declare(String)
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GAB_6043_FTP_Setup.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.String.Concat(V.Local.sError,V.Ambient.NewLine,"Last Action: ",V.Ambient.NewLine,V.Ambient.LastAction,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.cmdDelete_click.End
+
+Program.Sub.cmdClear_click.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.iRet.Declare
+V.Local.sUsername.Declare
+V.Local.sPass.Declare
+V.Local.sHost.Declare
+V.Local.sPort.Declare
+V.Local.iFlag.Declare
+V.Local.sVendor.Declare
+V.Local.sSql.Declare
+V.Local.bConnected.Declare
+V.Local.i1.Declare
+
+V.Local.sVendor.Set(V.Screen.F_FTP!txtVendor.Value)
+
+	gui.F_FTP.txtVendor.Text("")
+	gui.F_FTP.txtUsername.Text("")
+	gui.F_FTP.txtPASS.Text("")
+	gui.F_FTP.txtHost.Text("")
+	gui.F_FTP.txtPort.Text("")
+	gui.F_FTP.txtDir.Text("")
+	F.Intrinsic.Control.CallSub(LoadGSCustomer,"sVendor","")
+
+V.Local.sError.Declare(String)
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GAB_6043_FTP_Setup.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.String.Concat(V.Local.sError,V.Ambient.NewLine,"Last Action: ",V.Ambient.NewLine,V.Ambient.LastAction,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.cmdClear_click.End
+
+Program.Sub.Comments.Start
+${$5$}$3.0.0.0$}$1
+${$6$}$dyunus$}$20200721090020295$}$xZ6SHi8g7O0Qsxe6AiO2NH3PnOKQRy0Tf/tkEvwYUaSfVYFPe5VrKDtJTb+TjolsTh3/8gvQqj4=
+Program.Sub.Comments.End
